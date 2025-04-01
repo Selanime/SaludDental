@@ -8,22 +8,25 @@
 </head>
 <body>
     <a-scene>
- 
-      <a-camera position="0 1.6 3"></a-camera>
 
- 
-      <a-light type="directional" position="1 1 1"></a-light>
-
- 
-      <a-entity gltf-model="dientes.glb"></a-entity>
-      <a-entity gltf-model="cepillo.glb"></a-entity>
+        <a-camera position="0 -7 -1"></a-camera>
+        <a-light type="directional" position="1 1 1" intensity="1"></a-light>
 
 
-      <a-plane position="0 0 -4" rotation="-90 0 0" width="10" height="10" color="#ccc"></a-plane>
+        <a-entity 
+            gltf-model="dientes.glb" 
+            position="0 -16 -1"
+            scale="1 1 1">
+        </a-entity>
+
+        <a-entity 
+            gltf-model="dientes.glb" 
+            position="0 -16 -1"
+            scale="1 1 1">
+        </a-entity>
 
 
-      <a-sky color="#ECECEC"></a-sky>
-
+        <a-sky color="#ECECEC"></a-sky>
     </a-scene>
 </body>
 </html>
