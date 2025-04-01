@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelo 3D en A-Frame</title>
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-  </head>
-  <body>
+</head>
+<body>
     <a-scene>
  
       <a-camera position="0 1.6 3"></a-camera>
@@ -18,8 +21,9 @@
 
       <a-plane position="0 0 -4" rotation="-90 0 0" width="10" height="10" color="#ccc"></a-plane>
 
-      <!-- Cielo -->
+
       <a-sky color="#ECECEC"></a-sky>
+
     </a-scene>
-  </body>
+</body>
 </html>
