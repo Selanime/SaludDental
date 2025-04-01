@@ -20,7 +20,7 @@
         </a-entity>
 
         <a-entity 
-            gltf-model="dientes.glb" 
+            gltf-model="cepillo.gltf" 
             position="0 -16 -1"
             scale="1 1 1">
         </a-entity>
