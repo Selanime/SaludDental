@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cepillado en Adultos</title>
-    <script src="https://cdn.jsdelivr.net/npm/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
-    <script>
-    AFRAME.registerComponent('animation-mixer', AFRAME.AFRAME_EXTRAS.animationMixer);
-    </script>
+     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
+
 </head>
 <body>
     <a-scene>
@@ -20,7 +19,7 @@
             gltf-model="models/animation.gltf" 
             position="0 0 -4"
             scale="1 1 1"
-            animation-mixer; loop: repeat">
+            animation-mixer="clip: *; loop: repeat">
         </a-entity>
      
          <a-plane position="0 0 -4" rotation="-90 0 0" width="10" height="10" color="#ccc"></a-plane>
