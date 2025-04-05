@@ -2,34 +2,27 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Cepillado en Adultos</title>
-
-  <!-- Solo UNA versión de AR.js -->
+  <title>Cepillado AR</title>
   <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@ar-js-org/ar.js@3.4.2/aframe/build/aframe-ar.min.js"></script>
 </head>
 <body style="margin: 0; overflow: hidden;">
-
   <a-scene embedded arjs="sourceType: webcam;">
-    
     <a-assets>
-      <!-- Este archivo debe estar en la carpeta "models/" -->
-      <a-asset-item id="modelo" src="models/animation.glb"></a-asset-item>
+      <a-asset-item id="modelo" src="models/animation.gltf"></a-asset-item>
     </a-assets>
 
     <a-marker preset="hiro">
       <a-entity 
         gltf-model="#modelo"
-        scale="1 1 1"
         position="0 0 0"
+        scale="1 1 1"
         animation-mixer>
       </a-entity>
     </a-marker>
 
     <a-entity camera></a-entity>
   </a-scene>
-
 </body>
 </html>
