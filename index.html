@@ -11,6 +11,7 @@
   <a-scene embedded arjs="sourceType: webcam;">
     <a-assets>
       <a-asset-item id="modelo" src="models/animation.gltf"></a-asset-item>
+      <audio id="SD" src="models/SaludDental.mp3"></audio>
     </a-assets>
 
     <a-marker preset="hiro">
@@ -19,12 +20,12 @@
         position="0 0 0"
         rotation="-90 0 0"
         scale="0.5 0.5 0.5"
-        animation-mixer
-        sound="url(models/SaludDental.mp3); autoplay: true">
+        animation-mixer>
       </a-entity>
     </a-marker>
 
     <a-entity camera></a-entity>
+    <a-entity sound="autoplay: true; src: #SD"></a-entity>
   </a-scene>
 </body>
 </html>
