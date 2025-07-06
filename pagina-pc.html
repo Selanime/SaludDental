@@ -53,8 +53,8 @@
     <a-camera position="0 1.6 0"></a-camera>
     <a-light type="directional" position="0 1.6 1" intensity="1"></a-light>
 
-    <a-entity id="modeloAnimado"
-      gltf-model="animation.gltf"
+    <a-entity id="modelo"
+      gltf-model="models/animation.gltf"
       position="0 0 -4"
       scale="1 1 1">
     </a-entity>
@@ -65,7 +65,7 @@
 
   <!-- Script para botones -->
   <script>
-    const modelo = document.querySelector('#modeloAnimado');
+    const modelo = document.querySelector('#modelo');
     const playBtn = document.querySelector('#btnPlay');
     const pauseBtn = document.querySelector('#btnPause');
 
