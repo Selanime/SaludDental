@@ -1,0 +1,94 @@
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cepillado en Adultos</title>
+
+  <!-- A-Frame y extras -->
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
+  <script>
+    AFRAME.registerComponent('animation-mixer', AFRAME.AFRAME_EXTRAS.animationMixer);
+  </script>
+
+  <style>
+    #controls {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 10;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 16px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    button:disabled {
+      background-color: #999;
+      cursor: default;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Botones de control -->
+  <div id="controls">
+    <button id="btnPlay">Reproducir</button>
+    <button id="btnPause" disabled>Pausar</button>
+  </div>
+
+  <!-- Escena de A-Frame -->
+  <a-scene>
+    <a-camera position="0 1.6 0"></a-camera>
+    <a-light type="directional" position="0 1.6 1" intensity="1"></a-light>
+
+    <a-entity id="modeloAnimado"
+      gltf-model="animation.gltf"
+      position="0 0 -4"
+      scale="1 1 1">
+    </a-entity>
+
+    <a-plane position="0 0 -4" rotation="-90 0 0" width="10" height="10" color="#ccc"></a-plane>
+    <a-sky color="#ECECEC"></a-sky>
+  </a-scene>
+
+  <!-- Script para botones -->
+  <script>
+    const modelo = document.querySelector('#modeloAnimado');
+    const playBtn = document.querySelector('#btnPlay');
+    const pauseBtn = document.querySelector('#btnPause');
+
+    let mixerInitialized = false;
+
+    playBtn.addEventListener('click', () => {
+      if (!mixerInitialized) {
+        modelo.setAttribute('animation-mixer', 'clip: *; loop: repeat');
+        mixerInitialized = true;
+      } else {
+        modelo.components['animation-mixer'].play();
+      }
+      playBtn.disabled = true;
+      pauseBtn.disabled = false;
+    });
+
+    pauseBtn.addEventListener('click', () => {
+      if (modelo.components['animation-mixer']) {
+        modelo.components['animation-mixer'].pause();
+        playBtn.disabled = false;
+        pauseBtn.disabled = true;
+      }
+    });
+  </script>
+</body>
+</html>
