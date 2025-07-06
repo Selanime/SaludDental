@@ -1,31 +1,67 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>Cepillado AR</title>
-  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@ar-js-org/ar.js@3.4.2/aframe/build/aframe-ar.min.js"></script>
+  <meta charset="UTF-8">
+  <title>Seleccione su dispositivo</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .contenedor {
+      text-align: center;
+      background-color: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    button {
+      margin: 10px;
+      padding: 15px 30px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
-<body style="margin: 0; overflow: hidden;">
-  <a-scene embedded arjs="sourceType: webcam;">
-    <a-assets>
-      <a-asset-item id="modelo" src="models/animation.gltf"></a-asset-item>
-      <audio id="SD" src="models/SaludDental.mp3"></audio>
-    </a-assets>
+<body>
 
-    <a-marker preset="hiro">
-      <a-entity 
-        gltf-model="#modelo"
-        position="0 0 0"
-        rotation="-90 0 0"
-        scale="0.5 0.5 0.5"
-        animation-mixer>
-      </a-entity>
-    </a-marker>
+  <div class="contenedor">
+    <h1>¿Qué dispositivo estás usando?</h1>
+    <button onclick="redirigir('movil')">Dispositivo Móvil</button>
+    <button onclick="redirigir('pc')">Ordenador</button>
+  </div>
 
-    <a-entity camera></a-entity>
-    <a-entity sound="autoplay: true; src: #SD; loop: repeat"></a-entity>
-  </a-scene>
+  <script>
+    function redirigir(dispositivo) {
+      if (dispositivo === 'movil') {
+        window.location.href = "pagina-movil.html"; // cambia a tu URL para móviles
+      } else if (dispositivo === 'pc') {
+        window.location.href = "pagina-pc.html"; // cambia a tu URL para ordenadores
+      }
+    }
+  </script>
+
 </body>
 </html>
