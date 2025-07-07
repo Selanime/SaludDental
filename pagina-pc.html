@@ -45,7 +45,6 @@
       cursor: default;
     }
 
-    /* Estilos para el aviso modal */
     #avisoModal {
       position: fixed;
       z-index: 9999;
@@ -85,6 +84,10 @@
 </head>
 
 <body>
+
+  <!-- Audio -->
+  <audio id="SD" src="models/SaludDental.mp3"></audio>
+
   <!-- Modal de instrucciones -->
   <div id="avisoModal">
     <div>
@@ -125,6 +128,7 @@
     const escena = document.querySelector('a-scene');
     const avisoModal = document.getElementById('avisoModal');
     const cerrarBtn = document.getElementById('btnCerrarAviso');
+    const audio = document.getElementById('SD');
 
     let mixerInitialized = false;
 
@@ -141,6 +145,7 @@
       } else {
         modelo.components['animation-mixer'].play();
       }
+      audio.play(); // Inicia el audio
       playBtn.disabled = true;
       pauseBtn.disabled = false;
     });
@@ -148,9 +153,10 @@
     pauseBtn.addEventListener('click', () => {
       if (modelo.components['animation-mixer']) {
         modelo.components['animation-mixer'].pause();
-        playBtn.disabled = false;
-        pauseBtn.disabled = true;
       }
+      audio.pause(); // Pausa el audio
+      playBtn.disabled = false;
+      pauseBtn.disabled = true;
     });
   </script>
 </body>
