@@ -128,58 +128,30 @@
 
   <!-- Script de lógica -->
 <script>
-  const playBtn = document.querySelector('#btnPlay');
-  const pauseBtn = document.querySelector('#btnPause');
-  const controls = document.getElementById('controls');
-  const escena = document.querySelector('a-scene');
-  const avisoModal = document.getElementById('avisoModal');
-  const cerrarBtn = document.getElementById('btnCerrarAviso');
-  const audio = document.getElementById('SD');
+    const modelo = document.querySelector('#modeloAnimado');
+    const playBtn = document.querySelector('#btnPlay');
+    const pauseBtn = document.querySelector('#btnPause');
 
-  let modelo;
-  let mixerReady = false;
-  let isPaused = false;
-
-  window.addEventListener('load', () => {
-    modelo = document.querySelector('#modelo');
-
-    modelo.addEventListener('model-loaded', () => {
-      mixerReady = true;
-    });
-
-    cerrarBtn.addEventListener('click', () => {
-      avisoModal.style.display = 'none';
-      controls.style.display = 'block';
-      escena.style.display = 'block';
-    });
+    let mixerInitialized = false;
 
     playBtn.addEventListener('click', () => {
-      if (mixerReady && modelo.components['animation-mixer']) {
-        if (isPaused) {
-          // Reanudar animación
-          modelo.components['animation-mixer'].play();
-          isPaused = false;
-        } else {
-          // Solo iniciar si no estaba en pausa
-          modelo.components['animation-mixer'].stop();
-          modelo.components['animation-mixer'].play();
-          audio.currentTime = 0;
-          audio.play();
-        }
+      if (!mixerInitialized) {
+        modelo.setAttribute('animation-mixer', 'clip: *; loop: repeat');
+        mixerInitialized = true;
+      } else {
+        modelo.components['animation-mixer'].play();
       }
       playBtn.disabled = true;
       pauseBtn.disabled = false;
     });
 
     pauseBtn.addEventListener('click', () => {
-      if (mixerReady && modelo.components['animation-mixer']) {
+      if (modelo.components['animation-mixer']) {
         modelo.components['animation-mixer'].pause();
-        isPaused = true;
+        playBtn.disabled = false;
+        pauseBtn.disabled = true;
       }
-      audio.pause();
-      playBtn.disabled = false;
-      pauseBtn.disabled = true;
     });
-  });
+  </script>
 </script>
 </body>
