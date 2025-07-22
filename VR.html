@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -10,108 +11,14 @@
   <script>
     AFRAME.registerComponent('animation-mixer', AFRAME.AFRAME_EXTRAS.animationMixer);
   </script>
-
-  <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-    }
-
-    #controls {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      z-index: 10;
-    }
-
-    button {
-      padding: 10px 20px;
-      margin: 5px;
-      font-size: 16px;
-      border: none;
-      background-color: #1A3C7E;
-      color: white;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    button:disabled {
-      background-color: #999;
-      cursor: default;
-    }
-
-    #avisoModal {
-      position: fixed;
-      z-index: 9999;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.8);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      text-align: center;
-      font-family: Arial, sans-serif;
-    }
-
-    #avisoModal div {
-      background: #222;
-      padding: 30px;
-      border-radius: 10px;
-      max-width: 400px;
-    }
-
-    #avisoModal h2 {
-      margin-bottom: 20px;
-    }
-
-     #avisoModal img {
-      max-width: 250px;
-      margin-bottom: 20px;
-    }
-
-    #btnCerrarAviso {
-      margin-top: 20px;
-      background-color: rgb(21, 46, 97);
-    }
-
-    #btnCerrarAviso:hover {
-      background-color: rgb(26, 60, 126);
-    }
-  </style>
 </head>
 
 <body>
-
   <!-- Audio -->
   <audio id="SD" src="models/SaludDental.mp3"></audio>
 
-  <!-- Modal de instrucciones -->
-  <div id="avisoModal">
-    <div>
-      <h2>Instrucciones</h2>
-      <img src="models/Brush-it.png" alt="Instrucciones" />
-      <p>Utiliza el <strong>mouse</strong> para mover la cámara.</p>
-      <p>Utiliza las teclas <strong>W A S D</strong> o las <strong>flechas</strong> del teclado para desplazarte en el espacio.</p>
-      <button id="btnCerrarAviso">Entendido</button>
-    </div>
-  </div>
-
-  <!-- Botones de control -->
-  <div id="controls" style="display: none;">
-    <button id="btnPlay">Reproducir</button>
-    <button id="btnPause" disabled>Pausar</button>
-  </div>
-
   <!-- Escena de A-Frame -->
-  <a-scene style="display: none;">
+  <a-scene id="escena">
     <a-camera position="0 1.6 0" wasd-controls look-controls></a-camera>
     <a-light type="directional" position="0 1.6 1" intensity="1"></a-light>
 
@@ -126,56 +33,25 @@
     <a-sky color="#ECECEC"></a-sky>
   </a-scene>
 
-  <!-- Script de lógica -->
-<script>
-  window.addEventListener('load', () => {
-    const modelo = document.querySelector('#modelo'); // ID correcto
-    const playBtn = document.querySelector('#btnPlay');
-    const pauseBtn = document.querySelector('#btnPause');
-    const audio = document.getElementById('SD');
-    const cerrarBtn = document.getElementById('btnCerrarAviso');
-    const escena = document.querySelector('a-scene');
-    const controls = document.getElementById('controls');
-    const avisoModal = document.getElementById('avisoModal');
+  <script>
+    window.addEventListener('load', () => {
+      const modelo = document.querySelector('#modelo');
+      const audio = document.querySelector('#SD');
 
-    let mixerReady = false;
-    let isPaused = false;
-
-    modelo.addEventListener('model-loaded', () => {
-      mixerReady = true;
-    });
-
-    cerrarBtn.addEventListener('click', () => {
-      avisoModal.style.display = 'none';
-      escena.style.display = 'block';
-      controls.style.display = 'block';
-    });
-
-    playBtn.addEventListener('click', () => {
-      if (mixerReady && modelo.components['animation-mixer']) {
-        if (isPaused) {
-          modelo.components['animation-mixer'].play();
-          isPaused = false;
-        } else {
-          modelo.components['animation-mixer'].stop();
-          modelo.components['animation-mixer'].play();
+      modelo.addEventListener('model-loaded', () => {
+        // ✅ Esperar que el usuario haga una interacción para desbloquear el audio (requerido por navegadores)
+        document.body.addEventListener('click', () => {
+          if (modelo.components['animation-mixer']) {
+            modelo.components['animation-mixer'].stop();
+            modelo.components['animation-mixer'].play();
+          }
           audio.currentTime = 0;
           audio.play();
-        }
-      }
-      playBtn.disabled = true;
-      pauseBtn.disabled = false;
-    });
+        }, { once: true });
 
-    pauseBtn.addEventListener('click', () => {
-      if (mixerReady && modelo.components['animation-mixer']) {
-        modelo.components['animation-mixer'].pause();
-        audio.pause();
-        isPaused = true;
-      }
-      playBtn.disabled = false;
-      pauseBtn.disabled = true;
+        alert('Haz clic en cualquier parte para iniciar la animación y el audio.');
+      });
     });
-  });
-</script>
+  </script>
 </body>
+</html>
