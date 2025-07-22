@@ -13,18 +13,17 @@
   </script>
 
   <style>
-    body {
+    body, html {
       margin: 0;
       padding: 0;
       overflow: hidden;
-      font-family: Arial, sans-serif;
     }
 
     #controls {
       position: absolute;
       top: 10px;
       left: 10px;
-      z-index: 100;
+      z-index: 10;
     }
 
     button {
@@ -32,7 +31,7 @@
       margin: 5px;
       font-size: 16px;
       border: none;
-      background-color: #1A3C7E;
+      background-color: #007bff;
       color: white;
       border-radius: 5px;
       cursor: pointer;
@@ -44,7 +43,7 @@
 
     button:disabled {
       background-color: #999;
-      cursor: not-allowed;
+      cursor: default;
     }
   </style>
 </head>
@@ -61,7 +60,7 @@
   <audio id="SD" src="models/SaludDental.mp3"></audio>
 
   <!-- Escena de A-Frame -->
-  <a-scene id="escena">
+  <a-scene>
     <a-camera position="0 1.6 0" wasd-controls look-controls></a-camera>
     <a-light type="directional" position="0 1.6 1" intensity="1"></a-light>
 
@@ -76,53 +75,33 @@
     <a-sky color="#ECECEC"></a-sky>
   </a-scene>
 
-  <!-- Script -->
   <script>
     window.addEventListener('load', () => {
       const modelo = document.querySelector('#modelo');
-      const audio = document.querySelector('#SD');
+      const audio = document.getElementById('SD');
       const playBtn = document.querySelector('#btnPlay');
       const pauseBtn = document.querySelector('#btnPause');
 
-      let mixerReady = false;
-      let isPaused = false;
-
-      // 🔊 Desbloqueo de audio con primer clic en pantalla
-      document.body.addEventListener('click', () => {
-        audio.play().then(() => {
-          audio.pause(); // lo pausamos de inmediato, solo era para desbloquearlo
-        }).catch((e) => {
-          console.log('Audio bloqueado por el navegador:', e);
-        });
-      }, { once: true });
-
-      modelo.addEventListener('model-loaded', () => {
-        mixerReady = true;
-      });
+      let mixerInitialized = false;
 
       playBtn.addEventListener('click', () => {
-        if (mixerReady && modelo.components['animation-mixer']) {
-          if (isPaused) {
-            modelo.components['animation-mixer'].play();
-            audio.play();
-            isPaused = false;
-          } else {
-            modelo.components['animation-mixer'].stop();
-            modelo.components['animation-mixer'].play();
-            audio.currentTime = 0;
-            audio.play();
-          }
+        if (!mixerInitialized) {
+          modelo.setAttribute('animation-mixer', 'clip: *; loop: once; timeScale: 0.5');
+          mixerInitialized = true;
+        } else {
+          modelo.components['animation-mixer'].play();
         }
+        audio.currentTime = 0;
+        audio.play();
         playBtn.disabled = true;
         pauseBtn.disabled = false;
       });
 
       pauseBtn.addEventListener('click', () => {
-        if (mixerReady && modelo.components['animation-mixer']) {
+        if (modelo.components['animation-mixer']) {
           modelo.components['animation-mixer'].pause();
-          audio.pause();
-          isPaused = true;
         }
+        audio.pause();
         playBtn.disabled = false;
         pauseBtn.disabled = true;
       });
