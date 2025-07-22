@@ -13,11 +13,18 @@
   </script>
 
   <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
     #controls {
       position: absolute;
       top: 10px;
       left: 10px;
-      z-index: 10;
+      z-index: 100;
     }
 
     button {
@@ -25,7 +32,7 @@
       margin: 5px;
       font-size: 16px;
       border: none;
-      background-color: #007bff;
+      background-color: #1A3C7E;
       color: white;
       border-radius: 5px;
       cursor: pointer;
@@ -37,59 +44,79 @@
 
     button:disabled {
       background-color: #999;
-      cursor: default;
+      cursor: not-allowed;
     }
   </style>
 </head>
 
 <body>
+
   <!-- Botones de control -->
   <div id="controls">
     <button id="btnPlay">Reproducir</button>
     <button id="btnPause" disabled>Pausar</button>
   </div>
 
+  <!-- Audio -->
+  <audio id="SD" src="models/SaludDental.mp3"></audio>
+
   <!-- Escena de A-Frame -->
-  <a-scene>
-    <a-camera position="0 1.6 0"></a-camera>
+  <a-scene id="escena">
+    <a-camera position="0 1.6 0" wasd-controls look-controls></a-camera>
     <a-light type="directional" position="0 1.6 1" intensity="1"></a-light>
 
-    <a-entity id="modeloAnimado"
+    <a-entity id="modelo"
       gltf-model="models/brush-it.gltf"
       position="0 0 -4"
-      scale="1 1 1">
+      scale="1 1 1"
+      animation-mixer="clip: *; loop: once; timeScale: 0.5;">
     </a-entity>
 
     <a-plane position="0 0 -4" rotation="-90 0 0" width="10" height="10" color="#ccc"></a-plane>
     <a-sky color="#ECECEC"></a-sky>
   </a-scene>
 
-  <!-- Script para botones -->
   <script>
-    const modelo = document.querySelector('#modeloAnimado');
-    const playBtn = document.querySelector('#btnPlay');
-    const pauseBtn = document.querySelector('#btnPause');
+    window.addEventListener('load', () => {
+      const modelo = document.querySelector('#modelo');
+      const audio = document.querySelector('#SD');
+      const playBtn = document.querySelector('#btnPlay');
+      const pauseBtn = document.querySelector('#btnPause');
 
-    let mixerInitialized = false;
+      let mixerReady = false;
+      let isPaused = false;
 
-    playBtn.addEventListener('click', () => {
-      if (!mixerInitialized) {
-        modelo.setAttribute('animation-mixer', 'clip: *; loop: repeat; timeScale: 0.5');
-        mixerInitialized = true;
-      } else {
-        modelo.components['animation-mixer'].play();
-      }
-      playBtn.disabled = true;
-      pauseBtn.disabled = false;
-    });
+      modelo.addEventListener('model-loaded', () => {
+        mixerReady = true;
+      });
 
-    pauseBtn.addEventListener('click', () => {
-      if (modelo.components['animation-mixer']) {
-        modelo.components['animation-mixer'].pause();
+      playBtn.addEventListener('click', () => {
+        if (mixerReady && modelo.components['animation-mixer']) {
+          if (isPaused) {
+            modelo.components['animation-mixer'].play();
+            audio.play();
+            isPaused = false;
+          } else {
+            modelo.components['animation-mixer'].stop();
+            modelo.components['animation-mixer'].play();
+            audio.currentTime = 0;
+            audio.play();
+          }
+        }
+        playBtn.disabled = true;
+        pauseBtn.disabled = false;
+      });
+
+      pauseBtn.addEventListener('click', () => {
+        if (mixerReady && modelo.components['animation-mixer']) {
+          modelo.components['animation-mixer'].pause();
+          audio.pause();
+          isPaused = true;
+        }
         playBtn.disabled = false;
         pauseBtn.disabled = true;
-      }
+      });
     });
   </script>
 </body>
-</html
+</html>
