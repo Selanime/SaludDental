@@ -55,7 +55,7 @@
     <a-light type="directional" position="0 1.6 1" intensity="1"></a-light>
 
     <a-entity id="modeloAnimado"
-      gltf-model="animation.gltf"
+      gltf-model="brush-it.gltf"
       position="0 0 -4"
       scale="1 1 1">
     </a-entity>
@@ -75,7 +75,7 @@
 
     playBtn.addEventListener('click', () => {
       if (!mixerInitialized) {
-        modelo.setAttribute('animation-mixer', 'clip: *; loop: repeat');
+        modelo.setAttribute('animation-mixer="timeScale: 0.5"', 'clip: *; loop: repeat');
         mixerInitialized = true;
       } else {
         modelo.components['animation-mixer'].play();
