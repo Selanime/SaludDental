@@ -93,6 +93,7 @@
     let isPaused = false;
     let isFinished = true;
 
+    // Detectar fin del audio
     audio.addEventListener('ended', () => {
       isPaused = false;
       isFinished = true;
@@ -100,6 +101,7 @@
       pauseBtn.disabled = true;
     });
 
+    // Botón de reproducir
     playBtn.addEventListener('click', () => {
       if (!mixerInitialized) {
         modelo.setAttribute('animation-mixer', 'clip: *; loop: once; timeScale: 0.5');
@@ -119,6 +121,7 @@
       pauseBtn.disabled = false;
     });
 
+    // Botón de pausar
     pauseBtn.addEventListener('click', () => {
       if (modelo.components['animation-mixer']) {
         modelo.components['animation-mixer'].pause();
@@ -129,11 +132,26 @@
       pauseBtn.disabled = true;
     });
 
-    // Función para mover la cámara y mirar al modelo
+    // Función para mover la cámara y rotarla hacia el modelo
     function moverCamara(pos) {
-      camara.removeAttribute('look-at'); // para reiniciar
+      // Desactivar controles de cámara momentáneamente
+      camara.removeAttribute('look-controls');
+
+      // Cambiar posición
       camara.setAttribute('position', pos);
-      camara.setAttribute('look-at', '#modelo');
+
+      // Calcular rotación para mirar al modelo
+      const dx = modelo.object3D.position.x - pos.x;
+      const dy = modelo.object3D.position.y - pos.y;
+      const dz = modelo.object3D.position.z - pos.z;
+      const yaw = Math.atan2(dx, dz) * (180 / Math.PI); // rotación Y
+
+      camara.setAttribute('rotation', `0 ${yaw} 0`);
+
+      // Reactivar controles después de un pequeño retardo
+      setTimeout(() => {
+        camara.setAttribute('look-controls', '');
+      }, 100); // 100 ms suele ser suficiente
     }
 
     btnFrontal.addEventListener('click', () => {
@@ -149,5 +167,6 @@
     });
   });
 </script>
+
 </body>
 </html>
