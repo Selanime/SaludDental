@@ -51,22 +51,14 @@
 
   <!-- Escena de A-Frame -->
   <a-scene>
-    <a-assets>
-      <!-- Audio cargado como recurso -->
-      <audio id="audioClip" src="models/SaludDental.mp3"></audio>
-    </a-assets>
-
     <a-camera position="0 1.6 0"></a-camera>
     <a-light type="directional" position="0 1.6 1" intensity="1"></a-light>
 
     <a-entity id="modeloAnimado"
-      gltf-model="models/brush-it.gltf"
+      gltf-model="animation.gltf"
       position="0 0 -4"
       scale="1 1 1">
     </a-entity>
-
-    <!-- Entidad para reproducir el audio -->
-    <a-entity id="audioEntity" sound="src: #audioClip; autoplay: false; loop: true"></a-entity>
 
     <a-plane position="0 0 -4" rotation="-90 0 0" width="10" height="10" color="#ccc"></a-plane>
     <a-sky color="#ECECEC"></a-sky>
@@ -77,21 +69,16 @@
     const modelo = document.querySelector('#modeloAnimado');
     const playBtn = document.querySelector('#btnPlay');
     const pauseBtn = document.querySelector('#btnPause');
-    const audioEntity = document.querySelector('#audioEntity');
 
     let mixerInitialized = false;
 
     playBtn.addEventListener('click', () => {
       if (!mixerInitialized) {
-        modelo.setAttribute('animation-mixer', 'clip: *; loop: repeat');
+        modelo.setAttribute('animation-mixer', 'clip: *; loop: repeat; timeScale: 0.5');
         mixerInitialized = true;
       } else {
         modelo.components['animation-mixer'].play();
       }
-
-      // Reproducir el audio
-      audioEntity.components.sound.playSound();
-
       playBtn.disabled = true;
       pauseBtn.disabled = false;
     });
@@ -99,14 +86,10 @@
     pauseBtn.addEventListener('click', () => {
       if (modelo.components['animation-mixer']) {
         modelo.components['animation-mixer'].pause();
+        playBtn.disabled = false;
+        pauseBtn.disabled = true;
       }
-
-      // Pausar el audio
-      audioEntity.components.sound.pauseSound();
-
-      playBtn.disabled = false;
-      pauseBtn.disabled = true;
     });
   </script>
 </body>
-</html>
+</html
