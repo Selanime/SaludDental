@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -6,6 +6,7 @@
   <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@ar-js-org/ar.js@3.4.2/aframe/build/aframe-ar.min.js"></script>
+
   <style>
     #modal-instrucciones {
       position: fixed;
@@ -34,17 +35,19 @@
       font-size: 16px;
       border: none;
       border-radius: 5px;
-      background-color: #28a745;
+      background-color: rgb(21, 46, 97);
       color: white;
       cursor: pointer;
     }
 
     #modal-instrucciones button:hover {
-      background-color: #218838;
+      background-color: rgb(26, 60, 126);
     }
   </style>
 </head>
+
 <body style="margin: 0; overflow: hidden;">
+
   <!-- Modal de instrucciones -->
   <div id="modal-instrucciones">
     <img src="models/Brush-it.png" alt="Instrucciones" />
@@ -59,24 +62,41 @@
       <audio id="SD" src="models/SaludDental.mp3"></audio>
     </a-assets>
 
-    <a-marker preset="hiro">
+    <!-- Marcador -->
+    <a-marker preset="hiro" id="marcador">
       <a-entity 
+        id="modelo3d"
         gltf-model="#modelo"
         position="0 0 0"
         rotation="-90 0 0"
-        scale="0.5 0.5 0.5"
-        animation-mixer="timeScale: 0.5">
+        scale="0.5 0.5 0.5">
       </a-entity>
     </a-marker>
 
     <a-entity camera></a-entity>
-    <a-entity sound="autoplay: true; src: #SD; loop: true;"></a-entity>
+
+    <!-- Fuente de audio en la escena -->
+    <a-entity id="audio3d" sound="src: #SD; autoplay: false; loop: true;"></a-entity>
   </a-scene>
 
   <script>
     function iniciarAR() {
       document.getElementById('modal-instrucciones').style.display = 'none';
       document.querySelector('a-scene').style.display = 'block';
+
+      const marcador = document.querySelector('#marcador');
+      const modelo = document.querySelector('#modelo3d');
+      const audio = document.querySelector('#audio3d');
+
+      marcador.addEventListener('markerFound', () => {
+        modelo.setAttribute('animation-mixer', 'clip: *; loop: repeat');
+        audio.components.sound.playSound();
+      });
+
+      marcador.addEventListener('markerLost', () => {
+        modelo.removeAttribute('animation-mixer');
+        audio.components.sound.stopSound();
+      });
     }
   </script>
 </body>
