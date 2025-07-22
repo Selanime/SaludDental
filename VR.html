@@ -128,30 +128,54 @@
 
   <!-- Script de lógica -->
 <script>
-    const modelo = document.querySelector('#modeloAnimado');
+  window.addEventListener('load', () => {
+    const modelo = document.querySelector('#modelo'); // ID correcto
     const playBtn = document.querySelector('#btnPlay');
     const pauseBtn = document.querySelector('#btnPause');
+    const audio = document.getElementById('SD');
+    const cerrarBtn = document.getElementById('btnCerrarAviso');
+    const escena = document.querySelector('a-scene');
+    const controls = document.getElementById('controls');
+    const avisoModal = document.getElementById('avisoModal');
 
-    let mixerInitialized = false;
+    let mixerReady = false;
+    let isPaused = false;
+
+    modelo.addEventListener('model-loaded', () => {
+      mixerReady = true;
+    });
+
+    cerrarBtn.addEventListener('click', () => {
+      avisoModal.style.display = 'none';
+      escena.style.display = 'block';
+      controls.style.display = 'block';
+    });
 
     playBtn.addEventListener('click', () => {
-      if (!mixerInitialized) {
-        modelo.setAttribute('animation-mixer', 'clip: *; loop: repeat');
-        mixerInitialized = true;
-      } else {
-        modelo.components['animation-mixer'].play();
+      if (mixerReady && modelo.components['animation-mixer']) {
+        if (isPaused) {
+          modelo.components['animation-mixer'].play();
+          isPaused = false;
+        } else {
+          modelo.components['animation-mixer'].stop();
+          modelo.components['animation-mixer'].play();
+          audio.currentTime = 0;
+          audio.play();
+        }
       }
       playBtn.disabled = true;
       pauseBtn.disabled = false;
     });
 
     pauseBtn.addEventListener('click', () => {
-      if (modelo.components['animation-mixer']) {
+      if (mixerReady && modelo.components['animation-mixer']) {
         modelo.components['animation-mixer'].pause();
-        playBtn.disabled = false;
-        pauseBtn.disabled = true;
+        audio.pause();
+        isPaused = true;
       }
+      playBtn.disabled = false;
+      pauseBtn.disabled = true;
     });
-  </script>
+  });
 </script>
 </body>
