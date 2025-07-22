@@ -105,22 +105,6 @@
   </div>
 
   <!-- Escena de A-Frame -->
-  <a-scene style="display: none;">
-    <a-camera position="0 1.6 0" wasd-controls look-controls></a-camera>
-    <a-light type="directional" position="0 1.6 1" intensity="1"></a-light>
-
-    <a-entity id="modelo"
-    gltf-model="models/brush-it.gltf"
-    position="0 0 -4"
-    scale="1 1 1"
-    animation-mixer="clip: *; loop: once; timeScale: 0.5; startAt: 0;">
-    </a-entity>
-    
-    <a-plane position="0 0 -4" rotation="-90 0 0" width="10" height="10" color="#ccc"></a-plane>
-    <a-sky color="#ECECEC"></a-sky>
-  </a-scene>
-
-  <!-- Script de lógica -->
   <script>
   const modelo = document.querySelector('#modelo');
   const playBtn = document.querySelector('#btnPlay');
@@ -131,6 +115,13 @@
   const cerrarBtn = document.getElementById('btnCerrarAviso');
   const audio = document.getElementById('SD');
 
+  let mixerReady = false;
+
+  // Esperar a que el modelo esté completamente cargado
+  modelo.addEventListener('model-loaded', () => {
+    mixerReady = true;
+  });
+
   cerrarBtn.addEventListener('click', () => {
     avisoModal.style.display = 'none';
     controls.style.display = 'block';
@@ -138,23 +129,24 @@
   });
 
   playBtn.addEventListener('click', () => {
-    if (modelo.components['animation-mixer']) {
-      modelo.components['animation-mixer'].playAction(); // Reproduce animación
+    if (mixerReady && modelo.components['animation-mixer']) {
+      modelo.components['animation-mixer'].play(); // Reproducir animación correctamente
     }
-    audio.currentTime = 0; // Reinicia audio
-    audio.play();          // Reproduce audio
+    audio.currentTime = 0;
+    audio.play();
     playBtn.disabled = true;
     pauseBtn.disabled = false;
   });
 
   pauseBtn.addEventListener('click', () => {
-    if (modelo.components['animation-mixer']) {
-      modelo.components['animation-mixer'].pauseAction(); // Pausa animación
+    if (mixerReady && modelo.components['animation-mixer']) {
+      modelo.components['animation-mixer'].pause(); // Pausar animación correctamente
     }
-    audio.pause(); // Pausa audio
+    audio.pause();
     playBtn.disabled = false;
     pauseBtn.disabled = true;
   });
 </script>
+
 </body>
 </html>
