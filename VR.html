@@ -76,6 +76,7 @@
     <a-sky color="#ECECEC"></a-sky>
   </a-scene>
 
+  <!-- Script -->
   <script>
     window.addEventListener('load', () => {
       const modelo = document.querySelector('#modelo');
@@ -85,6 +86,15 @@
 
       let mixerReady = false;
       let isPaused = false;
+
+      // 🔊 Desbloqueo de audio con primer clic en pantalla
+      document.body.addEventListener('click', () => {
+        audio.play().then(() => {
+          audio.pause(); // lo pausamos de inmediato, solo era para desbloquearlo
+        }).catch((e) => {
+          console.log('Audio bloqueado por el navegador:', e);
+        });
+      }, { once: true });
 
       modelo.addEventListener('model-loaded', () => {
         mixerReady = true;
