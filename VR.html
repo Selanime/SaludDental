@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cepillado en Adultos</title>
 
-  <!-- A-Frame y extras -->
   <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
   <script>
@@ -50,18 +49,22 @@
 
 <body>
 
-  <!-- Botones de control -->
+  <!-- Controles -->
   <div id="controls">
     <button id="btnPlay">Reproducir</button>
     <button id="btnPause" disabled>Pausar</button>
+    <br>
+    <button id="btnFrontal">Vista Frontal</button>
+    <button id="btnIzquierda">Vista Izquierda</button>
+    <button id="btnDerecha">Vista Derecha</button>
   </div>
 
   <!-- Audio -->
   <audio id="SD" src="models/SaludDental.mp3"></audio>
 
-  <!-- Escena de A-Frame -->
+  <!-- Escena -->
   <a-scene>
-    <a-camera position="0 1.6 0" wasd-controls look-controls></a-camera>
+    <a-camera id="mainCamera" position="0 1.6 0" wasd-controls look-controls></a-camera>
     <a-light type="directional" position="0 1.6 1" intensity="1"></a-light>
 
     <a-entity id="modelo"
@@ -74,58 +77,76 @@
     <a-sky color="#ECECEC"></a-sky>
   </a-scene>
 
-  <!-- Script -->
   <script>
-  window.addEventListener('load', () => {
-    const modelo = document.querySelector('#modelo');
-    const audio = document.getElementById('SD');
-    const playBtn = document.querySelector('#btnPlay');
-    const pauseBtn = document.querySelector('#btnPause');
+    window.addEventListener('load', () => {
+      const modelo = document.querySelector('#modelo');
+      const audio = document.getElementById('SD');
+      const playBtn = document.querySelector('#btnPlay');
+      const pauseBtn = document.querySelector('#btnPause');
+      const camara = document.getElementById('mainCamera');
 
-    let mixerInitialized = false;
-    let isPaused = false;
-    let isFinished = true;
+      const btnFrontal = document.getElementById('btnFrontal');
+      const btnIzquierda = document.getElementById('btnIzquierda');
+      const btnDerecha = document.getElementById('btnDerecha');
 
-    // Detectar cuando termina el audio
-    audio.addEventListener('ended', () => {
-      isPaused = false;
-      isFinished = true;
-      playBtn.disabled = false;
-      pauseBtn.disabled = true;
+      let mixerInitialized = false;
+      let isPaused = false;
+      let isFinished = true;
+
+      audio.addEventListener('ended', () => {
+        isPaused = false;
+        isFinished = true;
+        playBtn.disabled = false;
+        pauseBtn.disabled = true;
+      });
+
+      playBtn.addEventListener('click', () => {
+        if (!mixerInitialized) {
+          modelo.setAttribute('animation-mixer', 'clip: *; loop: once; timeScale: 0.5');
+          mixerInitialized = true;
+        } else {
+          modelo.components['animation-mixer'].play();
+        }
+
+        if (isFinished) {
+          audio.currentTime = 0;
+          isFinished = false;
+        }
+
+        audio.play();
+        isPaused = false;
+        playBtn.disabled = true;
+        pauseBtn.disabled = false;
+      });
+
+      pauseBtn.addEventListener('click', () => {
+        if (modelo.components['animation-mixer']) {
+          modelo.components['animation-mixer'].pause();
+        }
+        audio.pause();
+        isPaused = true;
+        playBtn.disabled = false;
+        pauseBtn.disabled = true;
+      });
+
+      // Vista Frontal
+      btnFrontal.addEventListener('click', () => {
+        camara.setAttribute('position', { x: 0, y: 1.6, z: 0 });
+        camara.setAttribute('rotation', { x: 0, y: 0, z: 0 });
+      });
+
+      // Vista Izquierda
+      btnIzquierda.addEventListener('click', () => {
+        camara.setAttribute('position', { x: -4, y: 1.6, z: -0.01 });
+        camara.setAttribute('rotation', { x: 0, y: 90, z: 0 });
+      });
+
+      // Vista Derecha
+      btnDerecha.addEventListener('click', () => {
+        camara.setAttribute('position', { x: 4, y: 1.6, z: -0.01 });
+        camara.setAttribute('rotation', { x: 0, y: -90, z: 0 });
+      });
     });
-
-    playBtn.addEventListener('click', () => {
-      if (!mixerInitialized) {
-        modelo.setAttribute('animation-mixer', 'clip: *; loop: once; timeScale: 0.5');
-        mixerInitialized = true;
-      } else {
-        modelo.components['animation-mixer'].play();
-      }
-
-      // Reproduce desde el principio solo si es la primera vez o ya terminó
-      if (isFinished) {
-        audio.currentTime = 0;
-        isFinished = false;
-      }
-
-      audio.play();
-      isPaused = false;
-
-      playBtn.disabled = true;
-      pauseBtn.disabled = false;
-    });
-
-    pauseBtn.addEventListener('click', () => {
-      if (modelo.components['animation-mixer']) {
-        modelo.components['animation-mixer'].pause();
-      }
-      audio.pause();
-      isPaused = true;
-
-      playBtn.disabled = false;
-      pauseBtn.disabled = true;
-    });
-  });
-</script>
+  </script>
 </body>
 </html>
