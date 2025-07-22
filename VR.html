@@ -67,14 +67,14 @@
     <a-entity id="modelo"
       gltf-model="models/brush-it.gltf"
       position="0 0 -4"
-      scale="1 1 1"
-      animation-mixer="clip: *; loop: once; timeScale: 0.5;">
+      scale="1 1 1">
     </a-entity>
 
     <a-plane position="0 0 -4" rotation="-90 0 0" width="10" height="10" color="#ccc"></a-plane>
     <a-sky color="#ECECEC"></a-sky>
   </a-scene>
 
+  <!-- Script -->
   <script>
     window.addEventListener('load', () => {
       const modelo = document.querySelector('#modelo');
