@@ -5,78 +5,49 @@
   <title>Cepillado AR</title>
 
   <style>
-    body, html {
+    body {
       margin: 0;
       padding: 0;
-      overflow: hidden;
-    }
-
-    #controls {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      z-index: 10;
-    }
-
-    button {
-      padding: 10px 20px;
-      margin: 5px;
-      font-size: 16px;
-      border: none;
-      background-color: #1A3C7E;
-      color: white;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    button:disabled {
-      background-color: #999;
-      cursor: default;
-    }
-
-    #avisoModal {
-      position: fixed;
-      z-index: 9999;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.8);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      text-align: center;
+      background-color: #152E61;
       font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
     }
 
-    #avisoModal div {
-      background: #222;
-      padding: 30px;
+    .contenedor {
+      text-align: center;
+      background-color: white;
+      padding: 40px;
       border-radius: 10px;
-      max-width: 400px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
 
-    #avisoModal h2 {
+    h1 {
       margin-bottom: 20px;
+      color: #333;
     }
 
-     #avisoModal img {
+    img {
       max-width: 250px;
       margin-bottom: 20px;
     }
 
-    #btnCerrarAviso {
-      margin-top: 20px;
-      background-color: rgb(21, 46, 97);
+    button {
+      margin: 10px;
+      padding: 15px 30px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: rgb(26, 60, 126);
+      color: white;
+      transition: background-color 0.3s;
     }
 
-    #btnCerrarAviso:hover {
-      background-color: rgb(26, 60, 126);
+    button:hover {
+      background-color: rgb(21, 46, 97);
     }
   </style>
 </head>
@@ -84,7 +55,7 @@
 <body style="margin: 0; overflow: hidden;">
 
   <!-- Modal de instrucciones -->
-  <div id="avisoModal">
+  <div class="contenedor">
     <img src="models/Brush-it.png" alt="Instrucciones" />
     <p><strong>Utiliza tu cámara y enfoca de diferentes maneras el cuadro para observar desde diferentes ángulos.</strong></p>
     <button onclick="redirigir('movil')">Entendido</button>
