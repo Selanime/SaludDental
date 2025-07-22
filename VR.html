@@ -45,60 +45,21 @@
       background-color: #999;
       cursor: default;
     }
-
-    #avisoModal {
-      position: fixed;
-      z-index: 9999;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.8);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      text-align: center;
-      font-family: Arial, sans-serif;
-    }
-
-    #avisoModal div {
-      background: #222;
-      padding: 30px;
-      border-radius: 10px;
-      max-width: 400px;
-    }
-
-    #avisoModal h2 {
-      margin-bottom: 20px;
-    }
-
-    #btnCerrarAviso {
-      margin-top: 20px;
-      background-color: #28a745;
-    }
-
-    #btnCerrarAviso:hover {
-      background-color: #218838;
-    }
   </style>
 </head>
 
 <body>
-
   <!-- Audio -->
   <audio id="SD" src="models/SaludDental.mp3"></audio>
 
-  <!-- Modal de instrucciones -->
-
   <!-- Botones de control -->
-  <div id="controls" style="display: none;">
+  <div id="controls">
     <button id="btnPlay">Reproducir</button>
     <button id="btnPause" disabled>Pausar</button>
   </div>
 
   <!-- Escena de A-Frame -->
-  <a-scene style="display: none;">
+  <a-scene>
     <a-camera position="0 1.6 0" wasd-controls look-controls></a-camera>
     <a-light type="directional" position="0 1.6 1" intensity="1"></a-light>
 
@@ -117,19 +78,9 @@
     const modelo = document.querySelector('#modelo');
     const playBtn = document.querySelector('#btnPlay');
     const pauseBtn = document.querySelector('#btnPause');
-    const controls = document.getElementById('controls');
-    const escena = document.querySelector('a-scene');
-    const avisoModal = document.getElementById('avisoModal');
-    const cerrarBtn = document.getElementById('btnCerrarAviso');
     const audio = document.getElementById('SD');
 
     let mixerInitialized = false;
-
-    cerrarBtn.addEventListener('click', () => {
-      avisoModal.style.display = 'none';
-      controls.style.display = 'block';
-      escena.style.display = 'block';
-    });
 
     playBtn.addEventListener('click', () => {
       if (!mixerInitialized) {
@@ -138,7 +89,7 @@
       } else {
         modelo.components['animation-mixer'].play();
       }
-      audio.play(); // Inicia el audio
+      audio.play();
       playBtn.disabled = true;
       pauseBtn.disabled = false;
     });
@@ -147,7 +98,7 @@
       if (modelo.components['animation-mixer']) {
         modelo.components['animation-mixer'].pause();
       }
-      audio.pause(); // Pausa el audio
+      audio.pause();
       playBtn.disabled = false;
       pauseBtn.disabled = true;
     });
