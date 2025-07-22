@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -13,18 +13,17 @@
   </script>
 
   <style>
-    body {
+    body, html {
       margin: 0;
       padding: 0;
       overflow: hidden;
-      font-family: Arial, sans-serif;
     }
 
     #controls {
       position: absolute;
       top: 10px;
       left: 10px;
-      z-index: 100;
+      z-index: 10;
     }
 
     button {
@@ -32,7 +31,7 @@
       margin: 5px;
       font-size: 16px;
       border: none;
-      background-color: #1A3C7E;
+      background-color: #007bff;
       color: white;
       border-radius: 5px;
       cursor: pointer;
@@ -44,78 +43,113 @@
 
     button:disabled {
       background-color: #999;
-      cursor: not-allowed;
+      cursor: default;
+    }
+
+    #avisoModal {
+      position: fixed;
+      z-index: 9999;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+
+    #avisoModal div {
+      background: #222;
+      padding: 30px;
+      border-radius: 10px;
+      max-width: 400px;
+    }
+
+    #avisoModal h2 {
+      margin-bottom: 20px;
+    }
+
+    #btnCerrarAviso {
+      margin-top: 20px;
+      background-color: #28a745;
+    }
+
+    #btnCerrarAviso:hover {
+      background-color: #218838;
     }
   </style>
 </head>
 
 <body>
 
+  <!-- Audio -->
+  <audio id="SD" src="models/SaludDental.mp3"></audio>
+
+  <!-- Modal de instrucciones -->
+
   <!-- Botones de control -->
-  <div id="controls">
+  <div id="controls" style="display: none;">
     <button id="btnPlay">Reproducir</button>
     <button id="btnPause" disabled>Pausar</button>
   </div>
 
-  <!-- Audio -->
-  <audio id="SD" src="models/SaludDental.mp3"></audio>
-
   <!-- Escena de A-Frame -->
-  <a-scene id="escena">
+  <a-scene style="display: none;">
     <a-camera position="0 1.6 0" wasd-controls look-controls></a-camera>
     <a-light type="directional" position="0 1.6 1" intensity="1"></a-light>
 
     <a-entity id="modelo"
-      gltf-model="models/brush-it.gltf"
+      gltf-model="models/animation.gltf"
       position="0 0 -4"
-      scale="1 1 1"
-      animation-mixer="clip: *; loop: once; timeScale: 0.5;">
+      scale="1 1 1">
     </a-entity>
 
     <a-plane position="0 0 -4" rotation="-90 0 0" width="10" height="10" color="#ccc"></a-plane>
     <a-sky color="#ECECEC"></a-sky>
   </a-scene>
 
+  <!-- Script de lógica -->
   <script>
-    window.addEventListener('load', () => {
-      const modelo = document.querySelector('#modelo');
-      const audio = document.querySelector('#SD');
-      const playBtn = document.querySelector('#btnPlay');
-      const pauseBtn = document.querySelector('#btnPause');
+    const modelo = document.querySelector('#modelo');
+    const playBtn = document.querySelector('#btnPlay');
+    const pauseBtn = document.querySelector('#btnPause');
+    const controls = document.getElementById('controls');
+    const escena = document.querySelector('a-scene');
+    const avisoModal = document.getElementById('avisoModal');
+    const cerrarBtn = document.getElementById('btnCerrarAviso');
+    const audio = document.getElementById('SD');
 
-      let mixerReady = false;
-      let isPaused = false;
+    let mixerInitialized = false;
 
-      modelo.addEventListener('model-loaded', () => {
-        mixerReady = true;
-      });
+    cerrarBtn.addEventListener('click', () => {
+      avisoModal.style.display = 'none';
+      controls.style.display = 'block';
+      escena.style.display = 'block';
+    });
 
-      playBtn.addEventListener('click', () => {
-        if (mixerReady && modelo.components['animation-mixer']) {
-          if (isPaused) {
-            modelo.components['animation-mixer'].play();
-            audio.play();
-            isPaused = false;
-          } else {
-            modelo.components['animation-mixer'].stop();
-            modelo.components['animation-mixer'].play();
-            audio.currentTime = 0;
-            audio.play();
-          }
-        }
-        playBtn.disabled = true;
-        pauseBtn.disabled = false;
-      });
+    playBtn.addEventListener('click', () => {
+      if (!mixerInitialized) {
+        modelo.setAttribute('animation-mixer', 'clip: *; loop: repeat');
+        mixerInitialized = true;
+      } else {
+        modelo.components['animation-mixer'].play();
+      }
+      audio.play(); // Inicia el audio
+      playBtn.disabled = true;
+      pauseBtn.disabled = false;
+    });
 
-      pauseBtn.addEventListener('click', () => {
-        if (mixerReady && modelo.components['animation-mixer']) {
-          modelo.components['animation-mixer'].pause();
-          audio.pause();
-          isPaused = true;
-        }
-        playBtn.disabled = false;
-        pauseBtn.disabled = true;
-      });
+    pauseBtn.addEventListener('click', () => {
+      if (modelo.components['animation-mixer']) {
+        modelo.components['animation-mixer'].pause();
+      }
+      audio.pause(); // Pausa el audio
+      playBtn.disabled = false;
+      pauseBtn.disabled = true;
     });
   </script>
 </body>
