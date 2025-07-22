@@ -111,48 +111,67 @@
   </div>
 
   <!-- Escena de A-Frame -->
+  <a-scene style="display: none;">
+    <a-camera position="0 1.6 0" wasd-controls look-controls></a-camera>
+    <a-light type="directional" position="0 1.6 1" intensity="1"></a-light>
+
+    <a-entity id="modelo"
+      gltf-model="models/brush-it.gltf"
+      position="0 0 -4"
+      scale="1 1 1"
+      animation-mixer="clip: *; loop: once; timeScale: 0.5;">
+    </a-entity>
+
+    <a-plane position="0 0 -4" rotation="-90 0 0" width="10" height="10" color="#ccc"></a-plane>
+    <a-sky color="#ECECEC"></a-sky>
+  </a-scene>
+
+  <!-- Script de lógica -->
   <script>
-  const modelo = document.querySelector('#modelo');
-  const playBtn = document.querySelector('#btnPlay');
-  const pauseBtn = document.querySelector('#btnPause');
-  const controls = document.getElementById('controls');
-  const escena = document.querySelector('a-scene');
-  const avisoModal = document.getElementById('avisoModal');
-  const cerrarBtn = document.getElementById('btnCerrarAviso');
-  const audio = document.getElementById('SD');
+    const playBtn = document.querySelector('#btnPlay');
+    const pauseBtn = document.querySelector('#btnPause');
+    const controls = document.getElementById('controls');
+    const escena = document.querySelector('a-scene');
+    const avisoModal = document.getElementById('avisoModal');
+    const cerrarBtn = document.getElementById('btnCerrarAviso');
+    const audio = document.getElementById('SD');
 
-  let mixerReady = false;
+    let modelo;
+    let mixerReady = false;
 
-  // Esperar a que el modelo esté completamente cargado
-  modelo.addEventListener('model-loaded', () => {
-    mixerReady = true;
-  });
+    // Esperar a que A-Frame haya cargado completamente la escena
+    window.addEventListener('load', () => {
+      modelo = document.querySelector('#modelo');
 
-  cerrarBtn.addEventListener('click', () => {
-    avisoModal.style.display = 'none';
-    controls.style.display = 'block';
-    escena.style.display = 'block';
-  });
+      modelo.addEventListener('model-loaded', () => {
+        mixerReady = true;
+      });
 
-  playBtn.addEventListener('click', () => {
-    if (mixerReady && modelo.components['animation-mixer']) {
-      modelo.components['animation-mixer'].play(); // Reproducir animación correctamente
-    }
-    audio.currentTime = 0;
-    audio.play();
-    playBtn.disabled = true;
-    pauseBtn.disabled = false;
-  });
+      cerrarBtn.addEventListener('click', () => {
+        avisoModal.style.display = 'none';
+        controls.style.display = 'block';
+        escena.style.display = 'block';
+      });
 
-  pauseBtn.addEventListener('click', () => {
-    if (mixerReady && modelo.components['animation-mixer']) {
-      modelo.components['animation-mixer'].pause(); // Pausar animación correctamente
-    }
-    audio.pause();
-    playBtn.disabled = false;
-    pauseBtn.disabled = true;
-  });
-</script>
+      playBtn.addEventListener('click', () => {
+        if (mixerReady && modelo.components['animation-mixer']) {
+          modelo.components['animation-mixer'].stop();
+          modelo.components['animation-mixer'].play();
+        }
+        audio.currentTime = 0;
+        audio.play();
+        playBtn.disabled = true;
+        pauseBtn.disabled = false;
+      });
 
+      pauseBtn.addEventListener('click', () => {
+        if (mixerReady && modelo.components['animation-mixer']) {
+          modelo.components['animation-mixer'].pause();
+        }
+        audio.pause();
+        playBtn.disabled = false;
+        pauseBtn.disabled = true;
+      });
+    });
+  </script>
 </body>
-</html>
