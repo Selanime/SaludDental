@@ -60,7 +60,9 @@
       scale="1 1 1">
     </a-entity>
 
+    <!-- Audio fuera de la escena para mayor control desde JS -->
     <audio id="SD" src="models/SaludDental.mp3"></audio>
+
     <a-plane position="0 0 -4" rotation="-90 0 0" width="10" height="10" color="#ccc"></a-plane>
     <a-sky color="#ECECEC"></a-sky>
   </a-scene>
@@ -70,16 +72,18 @@
     const modelo = document.querySelector('#modeloAnimado');
     const playBtn = document.querySelector('#btnPlay');
     const pauseBtn = document.querySelector('#btnPause');
+    const audio = document.getElementById('SD');
 
     let mixerInitialized = false;
 
     playBtn.addEventListener('click', () => {
       if (!mixerInitialized) {
-        modelo.setAttribute('animation-mixer="timeScale: 0.5"', 'clip: *; loop: repeat');
+        modelo.setAttribute('animation-mixer', 'clip: *; loop: repeat; timeScale: 0.5');
         mixerInitialized = true;
       } else {
         modelo.components['animation-mixer'].play();
       }
+      audio.play();
       playBtn.disabled = true;
       pauseBtn.disabled = false;
     });
@@ -87,9 +91,10 @@
     pauseBtn.addEventListener('click', () => {
       if (modelo.components['animation-mixer']) {
         modelo.components['animation-mixer'].pause();
-        playBtn.disabled = false;
-        pauseBtn.disabled = true;
       }
+      audio.pause();
+      playBtn.disabled = false;
+      pauseBtn.disabled = true;
     });
   </script>
 </body>
