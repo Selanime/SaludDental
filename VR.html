@@ -78,75 +78,76 @@
   </a-scene>
 
   <script>
-    window.addEventListener('load', () => {
-      const modelo = document.querySelector('#modelo');
-      const audio = document.getElementById('SD');
-      const playBtn = document.querySelector('#btnPlay');
-      const pauseBtn = document.querySelector('#btnPause');
-      const camara = document.getElementById('mainCamera');
+  window.addEventListener('load', () => {
+    const modelo = document.querySelector('#modelo');
+    const audio = document.getElementById('SD');
+    const playBtn = document.querySelector('#btnPlay');
+    const pauseBtn = document.querySelector('#btnPause');
+    const camara = document.getElementById('mainCamera');
 
-      const btnFrontal = document.getElementById('btnFrontal');
-      const btnIzquierda = document.getElementById('btnIzquierda');
-      const btnDerecha = document.getElementById('btnDerecha');
+    const btnFrontal = document.getElementById('btnFrontal');
+    const btnIzquierda = document.getElementById('btnIzquierda');
+    const btnDerecha = document.getElementById('btnDerecha');
 
-      let mixerInitialized = false;
-      let isPaused = false;
-      let isFinished = true;
+    let mixerInitialized = false;
+    let isPaused = false;
+    let isFinished = true;
 
-      audio.addEventListener('ended', () => {
-        isPaused = false;
-        isFinished = true;
-        playBtn.disabled = false;
-        pauseBtn.disabled = true;
-      });
-
-      playBtn.addEventListener('click', () => {
-        if (!mixerInitialized) {
-          modelo.setAttribute('animation-mixer', 'clip: *; loop: once; timeScale: 0.5');
-          mixerInitialized = true;
-        } else {
-          modelo.components['animation-mixer'].play();
-        }
-
-        if (isFinished) {
-          audio.currentTime = 0;
-          isFinished = false;
-        }
-
-        audio.play();
-        isPaused = false;
-        playBtn.disabled = true;
-        pauseBtn.disabled = false;
-      });
-
-      pauseBtn.addEventListener('click', () => {
-        if (modelo.components['animation-mixer']) {
-          modelo.components['animation-mixer'].pause();
-        }
-        audio.pause();
-        isPaused = true;
-        playBtn.disabled = false;
-        pauseBtn.disabled = true;
-      });
-
-      // Vista Frontal
-      btnFrontal.addEventListener('click', () => {
-        camara.setAttribute('position', { x: 0, y: 1.6, z: 0 });
-        camara.setAttribute('rotation', { x: 0, y: 0, z: 0 });
-      });
-
-      // Vista Izquierda
-      btnIzquierda.addEventListener('click', () => {
-        camara.setAttribute('position', { x: -4, y: 1.6, z: -0.01 });
-        camara.setAttribute('rotation', { x: 0, y: 90, z: 0 });
-      });
-
-      // Vista Derecha
-      btnDerecha.addEventListener('click', () => {
-        camara.setAttribute('position', { x: 4, y: 1.6, z: -0.01 });
-        camara.setAttribute('rotation', { x: 0, y: -90, z: 0 });
-      });
+    audio.addEventListener('ended', () => {
+      isPaused = false;
+      isFinished = true;
+      playBtn.disabled = false;
+      pauseBtn.disabled = true;
     });
-  </script>
+
+    playBtn.addEventListener('click', () => {
+      if (!mixerInitialized) {
+        modelo.setAttribute('animation-mixer', 'clip: *; loop: once; timeScale: 0.5');
+        mixerInitialized = true;
+      } else {
+        modelo.components['animation-mixer'].play();
+      }
+
+      if (isFinished) {
+        audio.currentTime = 0;
+        isFinished = false;
+      }
+
+      audio.play();
+      isPaused = false;
+      playBtn.disabled = true;
+      pauseBtn.disabled = false;
+    });
+
+    pauseBtn.addEventListener('click', () => {
+      if (modelo.components['animation-mixer']) {
+        modelo.components['animation-mixer'].pause();
+      }
+      audio.pause();
+      isPaused = true;
+      playBtn.disabled = false;
+      pauseBtn.disabled = true;
+    });
+
+    // Función para mover la cámara y mirar al modelo
+    function moverCamara(pos) {
+      camara.removeAttribute('look-at'); // para reiniciar
+      camara.setAttribute('position', pos);
+      camara.setAttribute('look-at', '#modelo');
+    }
+
+    btnFrontal.addEventListener('click', () => {
+      moverCamara({ x: 0, y: 1.6, z: 0 });
+    });
+
+    btnIzquierda.addEventListener('click', () => {
+      moverCamara({ x: -4, y: 1.6, z: 0 });
+    });
+
+    btnDerecha.addEventListener('click', () => {
+      moverCamara({ x: 4, y: 1.6, z: 0 });
+    });
+  });
+</script>
 </body>
 </html>
