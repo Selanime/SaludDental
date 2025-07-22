@@ -76,36 +76,56 @@
 
   <!-- Script -->
   <script>
-    window.addEventListener('load', () => {
-      const modelo = document.querySelector('#modelo');
-      const audio = document.getElementById('SD');
-      const playBtn = document.querySelector('#btnPlay');
-      const pauseBtn = document.querySelector('#btnPause');
+  window.addEventListener('load', () => {
+    const modelo = document.querySelector('#modelo');
+    const audio = document.getElementById('SD');
+    const playBtn = document.querySelector('#btnPlay');
+    const pauseBtn = document.querySelector('#btnPause');
 
-      let mixerInitialized = false;
+    let mixerInitialized = false;
+    let isPaused = false;
+    let isFinished = true;
 
-      playBtn.addEventListener('click', () => {
-        if (!mixerInitialized) {
-          modelo.setAttribute('animation-mixer', 'clip: *; loop: once; timeScale: 0.5');
-          mixerInitialized = true;
-        } else {
-          modelo.components['animation-mixer'].play();
-        }
-        audio.currentTime = 0;
-        audio.play();
-        playBtn.disabled = true;
-        pauseBtn.disabled = false;
-      });
-
-      pauseBtn.addEventListener('click', () => {
-        if (modelo.components['animation-mixer']) {
-          modelo.components['animation-mixer'].pause();
-        }
-        audio.pause();
-        playBtn.disabled = false;
-        pauseBtn.disabled = true;
-      });
+    // Detectar cuando termina el audio
+    audio.addEventListener('ended', () => {
+      isPaused = false;
+      isFinished = true;
+      playBtn.disabled = false;
+      pauseBtn.disabled = true;
     });
-  </script>
+
+    playBtn.addEventListener('click', () => {
+      if (!mixerInitialized) {
+        modelo.setAttribute('animation-mixer', 'clip: *; loop: once; timeScale: 0.5');
+        mixerInitialized = true;
+      } else {
+        modelo.components['animation-mixer'].play();
+      }
+
+      // Reproduce desde el principio solo si es la primera vez o ya terminó
+      if (isFinished) {
+        audio.currentTime = 0;
+        isFinished = false;
+      }
+
+      audio.play();
+      isPaused = false;
+
+      playBtn.disabled = true;
+      pauseBtn.disabled = false;
+    });
+
+    pauseBtn.addEventListener('click', () => {
+      if (modelo.components['animation-mixer']) {
+        modelo.components['animation-mixer'].pause();
+      }
+      audio.pause();
+      isPaused = true;
+
+      playBtn.disabled = false;
+      pauseBtn.disabled = true;
+    });
+  });
+</script>
 </body>
 </html>
