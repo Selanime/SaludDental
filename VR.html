@@ -13,12 +13,6 @@
   </script>
 
   <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-    }
-
     #controls {
       position: absolute;
       top: 10px;
@@ -49,9 +43,6 @@
 </head>
 
 <body>
-  <!-- Audio -->
-  <audio id="SD" src="models/SaludDental.mp3"></audio>
-
   <!-- Botones de control -->
   <div id="controls">
     <button id="btnPlay">Reproducir</button>
@@ -60,25 +51,25 @@
 
   <!-- Escena de A-Frame -->
   <a-scene>
-    <a-camera position="0 1.6 0" wasd-controls look-controls></a-camera>
+    <a-camera position="0 1.6 0"></a-camera>
     <a-light type="directional" position="0 1.6 1" intensity="1"></a-light>
 
-    <a-entity id="modelo"
-      gltf-model="models/animation.gltf"
+    <a-entity id="modeloAnimado"
+      gltf-model="animation.gltf"
       position="0 0 -4"
       scale="1 1 1">
     </a-entity>
 
+    <audio id="SD" src="models/SaludDental.mp3"></audio>
     <a-plane position="0 0 -4" rotation="-90 0 0" width="10" height="10" color="#ccc"></a-plane>
     <a-sky color="#ECECEC"></a-sky>
   </a-scene>
 
-  <!-- Script de lógica -->
+  <!-- Script para botones -->
   <script>
-    const modelo = document.querySelector('#modelo');
+    const modelo = document.querySelector('#modeloAnimado');
     const playBtn = document.querySelector('#btnPlay');
     const pauseBtn = document.querySelector('#btnPause');
-    const audio = document.getElementById('SD');
 
     let mixerInitialized = false;
 
@@ -89,7 +80,6 @@
       } else {
         modelo.components['animation-mixer'].play();
       }
-      audio.play();
       playBtn.disabled = true;
       pauseBtn.disabled = false;
     });
@@ -97,10 +87,9 @@
     pauseBtn.addEventListener('click', () => {
       if (modelo.components['animation-mixer']) {
         modelo.components['animation-mixer'].pause();
+        playBtn.disabled = false;
+        pauseBtn.disabled = true;
       }
-      audio.pause();
-      playBtn.disabled = false;
-      pauseBtn.disabled = true;
     });
   </script>
 </body>
