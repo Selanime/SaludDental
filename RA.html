@@ -7,53 +7,9 @@
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@ar-js-org/ar.js@3.4.2/aframe/build/aframe-ar.min.js"></script>
 
-  <style>
-    #modal-instrucciones {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: rgba(0, 0, 0, 0.85);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      color: white;
-      font-family: Arial, sans-serif;
-      text-align: center;
-    }
-
-    #modal-instrucciones img {
-      max-width: 250px;
-      margin-bottom: 20px;
-    }
-
-    #modal-instrucciones button {
-      padding: 10px 20px;
-      font-size: 16px;
-      border: none;
-      border-radius: 5px;
-      background-color: rgb(21, 46, 97);
-      color: white;
-      cursor: pointer;
-    }
-
-    #modal-instrucciones button:hover {
-      background-color: rgb(26, 60, 126);
-    }
-  </style>
 </head>
 
 <body style="margin: 0; overflow: hidden;">
-
-  <!-- Modal de instrucciones -->
-  <div id="modal-instrucciones">
-    <img src="models/Brush-it.png" alt="Instrucciones" />
-    <p><strong>Utiliza tu cámara y enfoca de diferentes maneras el cuadro para observar desde diferentes ángulos.</strong></p>
-    <button onclick="iniciarAR()">Entendido</button>
-  </div>
 
   <!-- Escena A-Frame (oculta inicialmente) -->
   <a-scene embedded arjs="sourceType: webcam;" style="display: none;">
@@ -81,7 +37,6 @@
 
   <script>
     function iniciarAR() {
-      document.getElementById('modal-instrucciones').style.display = 'none';
       document.querySelector('a-scene').style.display = 'block';
 
       const marcador = document.querySelector('#marcador');
