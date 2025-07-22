@@ -11,9 +11,52 @@
   <script>
     AFRAME.registerComponent('animation-mixer', AFRAME.AFRAME_EXTRAS.animationMixer);
   </script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    #controls {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 100;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 16px;
+      border: none;
+      background-color: #1A3C7E;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    button:disabled {
+      background-color: #999;
+      cursor: not-allowed;
+    }
+  </style>
 </head>
 
 <body>
+
+  <!-- Botones de control -->
+  <div id="controls">
+    <button id="btnPlay">Reproducir</button>
+    <button id="btnPause" disabled>Pausar</button>
+  </div>
+
   <!-- Audio -->
   <audio id="SD" src="models/SaludDental.mp3"></audio>
 
@@ -37,19 +80,41 @@
     window.addEventListener('load', () => {
       const modelo = document.querySelector('#modelo');
       const audio = document.querySelector('#SD');
+      const playBtn = document.querySelector('#btnPlay');
+      const pauseBtn = document.querySelector('#btnPause');
+
+      let mixerReady = false;
+      let isPaused = false;
 
       modelo.addEventListener('model-loaded', () => {
-        // ✅ Esperar que el usuario haga una interacción para desbloquear el audio (requerido por navegadores)
-        document.body.addEventListener('click', () => {
-          if (modelo.components['animation-mixer']) {
+        mixerReady = true;
+      });
+
+      playBtn.addEventListener('click', () => {
+        if (mixerReady && modelo.components['animation-mixer']) {
+          if (isPaused) {
+            modelo.components['animation-mixer'].play();
+            audio.play();
+            isPaused = false;
+          } else {
             modelo.components['animation-mixer'].stop();
             modelo.components['animation-mixer'].play();
+            audio.currentTime = 0;
+            audio.play();
           }
-          audio.currentTime = 0;
-          audio.play();
-        }, { once: true });
+        }
+        playBtn.disabled = true;
+        pauseBtn.disabled = false;
+      });
 
-        alert('Haz clic en cualquier parte para iniciar la animación y el audio.');
+      pauseBtn.addEventListener('click', () => {
+        if (mixerReady && modelo.components['animation-mixer']) {
+          modelo.components['animation-mixer'].pause();
+          audio.pause();
+          isPaused = true;
+        }
+        playBtn.disabled = false;
+        pauseBtn.disabled = true;
       });
     });
   </script>
