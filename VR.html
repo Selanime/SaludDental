@@ -104,7 +104,7 @@
     // Botón de reproducir
     playBtn.addEventListener('click', () => {
       if (!mixerInitialized) {
-        modelo.setAttribute('animation-mixer', 'clip: *; loop: once; timeScale: 0.5');
+        modelo.setAttribute('animation-mixer', 'clip: *; loop: true; timeScale: 0.5');
         mixerInitialized = true;
       } else {
         modelo.components['animation-mixer'].play();
@@ -128,7 +128,7 @@
       }
       audio.pause();
       isPaused = true;
-      playBtn.disabled = false;
+      playBtn.disabled = false; loop: true
       pauseBtn.disabled = true;
     });
 
