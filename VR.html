@@ -115,9 +115,10 @@
         isFinished = false;
       }
 
+      audio.loop = true;
       audio.play();
       isPaused = false;
-      playBtn.disabled = true;
+      playBtn.disabled = true; 
       pauseBtn.disabled = false;
     });
 
@@ -128,7 +129,7 @@
       }
       audio.pause();
       isPaused = true;
-      playBtn.disabled = false; loop: true
+      playBtn.disabled = false; 
       pauseBtn.disabled = true;
     });
 
