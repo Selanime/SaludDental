@@ -22,6 +22,15 @@
       border-radius: 10px;
       box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
+	
+	.seccion {
+	  position: absolute;
+      bottom: 0;            
+      left: 80%;
+      transform: translateX(-50%);
+      text-align: center;
+      border-radius: 10px;
+    }
 
     h1 {
       margin-bottom: 20px;
@@ -60,12 +69,18 @@
     <button onclick="redirigir('pc')">Ordenador</button>
   </div>
 
+  <div class="seccion">
+   <button onclick="redirigir('cr')">Creditos</button>
+  </div>
+  
   <script>
     function redirigir(dispositivo) {
       if (dispositivo === 'movil') {
-        window.location.href = "RA-VR-M.html"; // cambia a tu URL para móviles
+        window.location.href = "RA-VR-M.html"; 
       } else if (dispositivo === 'pc') {
-        window.location.href = "RA-VR.html"; // cambia a tu URL para ordenadores
+        window.location.href = "RA-VR.html"; 
+      } else if (dispositivo === 'cr') {
+        window.location.href = "creditos.html"; 
       }
     }
   </script>
